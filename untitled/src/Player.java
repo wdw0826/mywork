@@ -4,6 +4,7 @@ public class Player extends Character {
     private int exp = 0;
     private int maxHp = 100;
     private Weapon weapon;
+    private int potions = 3;
 
     public Player() {
         super(100, 10);
@@ -35,6 +36,15 @@ public class Player extends Character {
             System.out.println("Level Up!");
         }
     }
+    public void heal(int amount) {
+        this.hp += amount;
+        if (this.hp > maxHp) this.hp = maxHp; // 不超過血量上限
+        System.out.println("使用藥水！回復了 " + amount + " 點 HP。當前 HP: " + this.hp);
+        this.potions--;
+    }
+
+    public int getPotions() { return potions; }
+    public void addPotions(int count) { this.potions += count; }
 
     public void showStatus() {
         System.out.println("=== Player ===");

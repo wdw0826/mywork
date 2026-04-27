@@ -28,7 +28,7 @@ public class Main {
 
         while (true) {
 
-            System.out.println("1. 狀態 | 2. 任務板 | 3. 接任務 | 4. 商店 | 5. 存檔 | 6. 讀取存檔 | 7.離開");
+            System.out.println("1. 狀態 | 2. 任務板 | 3. 接任務 | 4. 商店 | 5. 離開並存檔 | 6. 讀取存檔 | 7.離開(不存檔)" );
             int c = sc.nextInt();
 
             switch (c) {

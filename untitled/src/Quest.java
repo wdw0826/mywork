@@ -25,6 +25,15 @@ public class Quest {
     public void unlock() {
         unlocked = true;
     }
+    public void resetStatus() {
+        this.status = QuestStatus.AVAILABLE;
+    }
+
+    public void setMonster(Monster monster) {
+        this.monster = monster;
+        // 如果你之前有做動態命名，這裡也要更新任務名稱
+        this.name = "狩獵 " + monster.getName();
+    }
 
     public boolean isUnlocked() {
         return unlocked;

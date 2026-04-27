@@ -5,22 +5,34 @@ public class Main {
     public static void main(String[] args) {
 
         Player player = new Player();
-        player.equipWeapon(new Weapon("Iron Sword", 5));
+        player.equipWeapon(new Weapon("初階獵刀", 5));
 
         QuestService qs = new QuestService();
+
+// 一星任務池
+        for (int i = 0; i < 3; i++) {
+            Monster m = MonsterFactory.createMonster(QuestRank.ONE_STAR, i);
+            Quest q = new Quest("【1★】" + m.getName() + "狩獵", QuestRank.ONE_STAR, m);
+            q.unlock(); // 直接全部開放
+            qs.addQuest(q);
+        }
+
+// 二星任務池
+        for (int i = 0; i < 3; i++) {
+            Monster m = MonsterFactory.createMonster(QuestRank.TWO_STAR, i);
+            Quest q = new Quest("【2★】" + m.getName() + "狩獵", QuestRank.TWO_STAR, m);
+            q.unlock();
+            qs.addQuest(q);
+        }
+
+// 三星任務池
+        for (int i = 0; i < 3; i++) {
+            Monster m = MonsterFactory.createMonster(QuestRank.THREE_STAR, i);
+            Quest q = new Quest("【3★】" + m.getName() + "狩獵", QuestRank.THREE_STAR, m);
+            q.unlock();
+            qs.addQuest(q);
+        }
         BattleService bs = new BattleService();
-
-        // 建任務
-        Monster m1 = MonsterFactory.createMonster(QuestRank.ONE_STAR);
-        // 命名任務，例如「狩獵 藍速龍」
-        Quest q1 = new Quest("狩獵 " + m1.getName(), QuestRank.ONE_STAR, m1);
-        q1.unlock();
-
-        Monster m2 = MonsterFactory.createMonster(QuestRank.TWO_STAR);
-        Quest q2 = new Quest("狩獵 " + m2.getName(), QuestRank.TWO_STAR, m2);
-
-        qs.addQuest(q1);
-        qs.addQuest(q2);
 
         SaveService saveService = new SaveService(); // 存檔用
 
@@ -36,6 +48,7 @@ public class Main {
                 case 2 -> qs.showQuests();
                 case 3 -> {
                     qs.showQuests();
+                    System.out.println("請輸入欲挑戰的任務編號: ");
                     int i = sc.nextInt();
                     Quest q = qs.acceptQuest(i);
                     bs.startBattle(player, q);

@@ -9,18 +9,16 @@ public class QuestService {
     }
 
     public void showQuests() {
-        System.out.println("=== Quest Board ===");
-
+        System.out.println("\n========== 獵人公會任務板 ==========");
         for (int i = 0; i < quests.size(); i++) {
             Quest q = quests.get(i);
-
-            if (!q.isUnlocked()) continue;
-
-            System.out.println(i + ". " +
-                    q.getRank() + " " +
-                    q.getName() +
-                    " [" + q.getStatus() + "]");
+            if (q.isUnlocked()) {
+                Monster m = q.getMonster();
+                System.out.printf("%d. %s (目標血量:%d) \n", i, q.getName(), m.getHp());
+            }
         }
+        System.out.println("====================================");
+
     }
 
     public Quest acceptQuest(int idx) {

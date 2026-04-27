@@ -3,64 +3,63 @@ import java.util.Scanner;
 public class BattleService {
     public void startBattle(Player player, Quest quest) {
         Monster monster = quest.getMonster();
-        System.out.println("\n========================================");
-        System.out.println("   [ 任務開始 ] " + quest.getName());
-        System.out.println("   目標確定：大型魔物 【" + monster.getName() + "】");
-        System.out.println("========================================\n");
-
         Scanner sc = new Scanner(System.in);
-        boolean usedPotionThisTurn = false; // 用來標記這回合是否喝水
+        System.out.println("\n===== 遭遇魔物：" + monster.getName() + " =====");
 
         while (player.getHp() > 0 && monster.getHp() > 0) {
-            System.out.println("\n玩家 HP: " + player.getHp() + " | 小藥水: " + player.getSmallPotions() + " | 大藥水: " + player.getBigPotions());
-            System.out.println("行動：1.攻擊 2.喝小藥水(回20) 3.喝大藥水(回50)");
+            System.out.println("\n" + monster.getName() + " HP: " + monster.getHp());
+            System.out.println("玩家 HP: " + player.getHp() + " | 小藥水: " + player.getSmallPotions() + " | 大藥水: " + player.getBigPotions());
+            System.out.println("行動：1. 攻擊  2. 喝小藥水(回20+減傷50%)  3. 喝大藥水(回50+減傷50%) 4.退出");
 
             int choice = sc.nextInt();
-            int currentAttack = player.getTotalAttack();
-            usedPotionThisTurn = false;
+            boolean isDefending = false; // 紀錄本回合是否處於喝水減傷狀態
 
-            if (choice == 2) {
-                if (player.getSmallPotions() > 0) {
-                    player.heal(20);
-                    player.subSmallPotions(1);
-                    usedPotionThisTurn = true;
+            // --- 玩家回合 ---
+            if (choice == 1) {
+                player.attack(monster); // 正常攻擊
+            } else if (choice == 2 || choice == 3) {
+                // 檢查藥水數量
+                if ((choice == 2 && player.getSmallPotions() > 0) || (choice == 3 && player.getBigPotions() > 0)) {
+                    int healAmount = (choice == 2) ? 20 : 50;
+                    player.heal(healAmount);
+                    if (choice == 2) player.subSmallPotions(1);
+                    else player.subBigPotions(1);
+
+                    isDefending = true; // 開啟減傷標記
+                    System.out.println(">> 喝水中！本回合無法攻擊，但獲得 50% 減傷效果！");
                 } else {
-                    System.out.println("沒有小藥水！自動執行攻擊。");
+                    System.out.println(">> 沒藥水了！強制改為攻擊！");
+                    player.attack(monster);
                 }
-            } else if (choice == 3) {
-                if (player.getBigPotions() > 0) {
-                    player.heal(50);
-                    player.subBigPotions(1);
-                    usedPotionThisTurn = true;
-                } else {
-                    System.out.println("沒有大藥水！自動執行攻擊。");
-                }
+            }else if(choice == 4){
+                System.out.println("離開戰鬥，返回主畫面");
+                return;
             }
 
-            // 執行攻擊邏輯
-            if (usedPotionThisTurn) {
-                // 喝水後攻擊減半
-                int debuffDmg = currentAttack / 2;
-                System.out.println("喝水中... 攻擊力暫時減半！");
-                monster.takeDamage(debuffDmg);
-                System.out.println("玩家造成 " + debuffDmg + " 點傷害");
-            } else {
-                player.attack(monster);
-            }
-
-            // 怪物反擊
+            // --- 魔物回合 ---
             if (monster.getHp() > 0) {
-                monster.attack(player);
+                System.out.println(monster.getName() + " 發動攻擊！");
+
+                int originalDmg = monster.getattack();
+                int finalDmg = originalDmg;
+
+                if (isDefending) {
+                    finalDmg = originalDmg / 2; // 傷害減半
+                    System.out.println(">> [防禦生效] 玩家採取喝水姿勢，抵擋了 50% 的傷害！");
+                }
+
+                player.takeDamage(finalDmg);
+                System.out.println("玩家受到 " + finalDmg + " 點傷害，剩餘 HP: " + player.getHp());
             }
         }
 
-        if (player.getHp() > 0) {
+        if (player.getHp() > 0 && monster.getHp() < 0) {
             System.out.println("\n★ 狩獵成功！ ★");
             // 現在我們把它改回 AVAILABLE，讓它可以被重複接取
             quest.resetStatus();
 
             // 同時，我們讓這格任務的魔物「重生」成新的一隻
-            quest.setMonster(MonsterFactory.createMonster(quest.getRank()));
+            quest.setMonster(MonsterFactory.createMonster(quest.getRank(),0));
 
             player.gainExp(50);
             player.addMoney(150);
@@ -70,6 +69,10 @@ public class BattleService {
             int recoverAmount = lostHp / 2;
             player.heal(recoverAmount);
             System.out.println("戰後休整：回復了剩餘血量的 50% (" + recoverAmount + " 點)。當前 HP: " + player.getHp());
+        }else{
+            System.out.println("狩獵失敗!即將退回主畫面，並將血量回復至30");
+            System.out.println("====================================");
+            player.setHp(30);
         }
     }
 }

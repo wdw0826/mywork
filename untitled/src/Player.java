@@ -7,7 +7,6 @@ public class Player extends Character {
     private int bigPotions = 3;
     private int maxHp = 100;
     private Weapon weapon;
-    private int potions = 3;
 
     public Player() {
         super(100, 10);
@@ -34,7 +33,6 @@ public class Player extends Character {
             level++;
             exp = 0;
             attack += 5;
-            maxHp += 20;
             hp = maxHp;
             System.out.println("Level Up!");
         }

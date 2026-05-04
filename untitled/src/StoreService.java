@@ -8,7 +8,7 @@ public class StoreService {
             System.out.println("\n===== 補給與鍛造屋 =====");
             System.out.println("當前持有金錢: " + player.getMoney());
             Weapon current = player.getWeapon();
-            System.out.println("當前裝備武器: " + player.getWeapon());
+            System.out.println("當前裝備武器: " + player.getWeapon().getName());
             System.out.println("------------------------");
             System.out.println("1. 購買 小回復藥 ($100)");
             System.out.println("2. 購買 大回復藥 ($200)");

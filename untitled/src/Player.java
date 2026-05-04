@@ -7,9 +7,15 @@ public class Player extends Character {
     private int bigPotions = 3;
     private int maxHp = 100;
     private Weapon weapon;
+    private String name;
 
     public Player() {
         super(100, 10);
+    }
+    public Player(String name) {
+        super(100, 10); // 假設初始 HP 100, ATK 10
+        this.name = name;
+        // 初始化其他數值
     }
 
     public int getTotalAttack() {
@@ -67,6 +73,9 @@ public class Player extends Character {
     public int getLevel() { return this.level; }
     public int getExp() { return this.exp; }
     public int getMaxHp(){ return this.maxHp; }
+
+    public String getName() { return name; }
+    public void setName(String name) { this.name = name; }
 
     public void showStatus() {
         System.out.println("=== Player ===");

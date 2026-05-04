@@ -10,6 +10,5 @@ public class Monster extends Character {
     }
 
     public String getName() { return name; }
-    public int getExpValue() { return expValue; }
     public int getattack() { return attack; }
 }

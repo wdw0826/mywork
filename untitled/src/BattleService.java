@@ -52,13 +52,12 @@ public class BattleService {
                 System.out.println("玩家受到 " + finalDmg + " 點傷害，剩餘 HP: " + player.getHp());
             }
         }
-
-        if (player.getHp() > 0 && monster.getHp() < 0) {
+        //---狩獵結果---
+        if (player.getHp() > 0 && monster.getHp() <= 0) {
             System.out.println("\n★ 狩獵成功！ ★");
-            // 現在我們把它改回 AVAILABLE，讓它可以被重複接取
             quest.resetStatus();
 
-            // 同時，我們讓這格任務的魔物「重生」成新的一隻
+            //重生新的一隻
             quest.setMonster(MonsterFactory.createMonster(quest.getRank(),0));
 
             player.gainExp(50);

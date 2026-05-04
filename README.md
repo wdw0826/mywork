@@ -17,30 +17,61 @@
 
 ### 3. 📜 多樣化任務板
 *   **自由選擇**：全星級任務初始開放，玩家可自由選擇挑戰對象。
-*   **魔物池**：每個星級包含多種代表性魔物（如：一星青熊獸、三星轟龍），具備明顯的數值落差。
+*   **動態重生**：任務完成後會自動重置，並由工廠產出新魔物，讓玩家可以持續刷怪。
 
 ### 4. 💾 存檔紀錄功能
 *   **資料持久化**：支援 File IO，可保存等級、金錢、藥水數量及強化後的武器狀態。
 
 ---
 
-## 🏗️ 系統架構
+## 🏗️ 系統架構圖 (UML Class Diagram)
+```mermaid
+classDiagram
+    class Character {
+        <<abstract>>
+        -int hp
+        -int maxHp
+        -int attack
+        +takeDamage(int dmg)
+        +heal(int amount)
+        +attack(Character target)*
+    }
 
-*   **`model`**：定義 Player, Monster, Quest, Weapon 等核心物件。
-*   **`service`**：
-    *   `BattleService`：控制戰鬥流程與減傷邏輯。
-    *   `StoreService`：處理交易與武器字串解析。
-    *   `SaveService`：處理檔案讀寫。
-*   **`factory`**：`MonsterFactory` 負責根據星等產出特定的魔物實體。
+    class Player {
+        -int level
+        -int exp
+        -int money
+        -int smallPotions
+        -int bigPotions
+        -Weapon weapon
+        +gainExp(int amount)
+        +equipWeapon(Weapon w)
+    }
 
----
+    class Monster {
+        -String name
+        -int expValue
+        +getName()
+        +getExpValue()
+    }
 
-## 🛠️ 技術應用
-*   **OOP 特性**：應用繼承（Character）、封裝與多型。
-*   **工廠模式**：封裝魔物生成邏輯。
-*   **File IO**：實作 `BufferedReader` 與 `BufferedWriter` 存取 `save.txt`。
+    class Weapon {
+        -String name
+        -int attackBonus
+        +getName()
+        +getAttackBonus()
+    }
 
----
+    class Quest {
+        -String name
+        -QuestRank rank
+        -Monster monster
+        -QuestStatus status
+        +unlock()
+        +resetStatus()
+    }
 
-> **開發環境**：JDK 17 / IntelliJ IDEA
-> **專案版本**：v1.0
+    Character <|-- Player
+    Character <|-- Monster
+    Player "1" *-- "1" Weapon : 裝備
+    Quest "1"

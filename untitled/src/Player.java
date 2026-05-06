@@ -69,6 +69,7 @@ public class Player extends Character {
     public void setSmallPotions(int count) { this.smallPotions = count; }
     public void setBigPotions(int count) { this.bigPotions = count; }
     public void setHp(int hp) { this.hp = hp; }
+    public void setMaxHp(int maxHp) { this.maxHp=maxHp; }
     public Weapon getWeapon() { return this.weapon; }
     public int getLevel() { return this.level; }
     public int getExp() { return this.exp; }
@@ -87,4 +88,6 @@ public class Player extends Character {
         System.out.println("Big potions: " + bigPotions);
         System.out.println("Small potions: " + smallPotions);
     }
+
+
 }

@@ -9,6 +9,8 @@ public class Main {
         BattleService bs = new BattleService();
         Player player = null;
 
+        saveService.initDatabase();
+
         // --- 初始化任務池 (維持你原本的邏輯) ---
         setupQuests(qs);
 

@@ -12,13 +12,13 @@ public class SaveService {
     }
 
     // 執行存檔業務
-    public void saveGame(Player player) {
+    public void save(Player player) {
         playerDAO.saveOrUpdate(player);
         System.out.println(">> [系統] 遊戲進度已安全存入 PostgreSQL 資料庫。");
     }
 
     // 執行讀檔業務
-    public boolean loadGame(Player player) {
+    public boolean load(Player player) {
         if (playerDAO.load(player)) {
             System.out.println(">> [資料庫] 讀檔成功！歡迎回來，" + player.getName());
             return true;

@@ -1,110 +1,74 @@
 package com.monster;
+
 import com.monster.model.*;
 import com.monster.service.*;
-import com.monster.config.*;
-import com.monster.dao.*;
 import java.util.Scanner;
+import java.util.List;
 
 public class Main {
     public static void main(String[] args) {
+        // 1. 初始化所有 Service 物件 (解決 qs 與 saveService 紅字)
         SaveService saveService = new SaveService();
-        saveService.initDatabase(); // 啟動即初始化表格
+        QuestService qs = new QuestService();
+        StoreService storeService = new StoreService();
+
+        saveService.initDatabase(); // 初始化資料庫表格
+        qs.setupQuests();           // 初始化任務清單
 
         Scanner sc = new Scanner(System.in);
+        Player player = null; // 解決 player 紅字
+
         System.out.println("=== 歡迎來到 Java 魔物獵人世界 ===");
-        System.out.println("1. 讀取舊有獵人存檔 (資料庫)");
+        System.out.println("1. 讀取舊有獵人存檔");
         System.out.println("2. 建立新的獵人檔案");
         System.out.print("請選擇代碼: ");
 
         int startChoice = 0;
         if (sc.hasNextInt()) {
             startChoice = sc.nextInt();
-            sc.nextLine(); // 消耗換行符
+            sc.nextLine();
         }
 
         if (startChoice == 1) {
-            // 讀檔模式
             player = new Player("暫時名稱");
-            saveService.load(player);
-            // 檢查是否真的有讀到資料 (如果名字沒變代表資料庫沒東西)
-            if (player.getName().equals("暫時名稱")) {
+            // 呼叫 Service 的讀檔功能
+            boolean isLoaded = saveService.load(player);
+
+            if (!isLoaded || player.getName().equals("暫時名稱")) {
                 System.out.println(">> [系統] 找不到現有存檔，改為建立新角色。");
                 player = createNewPlayer(sc);
             } else {
                 System.out.println(">> [系統] 歡迎回來，" + player.getName() + "！");
             }
         } else {
-            // 新檔案模式
             player = createNewPlayer(sc);
         }
 
-        // --- 進入主遊戲迴圈 ---
+        // 遊戲主選單範例
         while (true) {
-            System.out.println("\n--------------------------------------------------");
-            System.out.println("【主選單】獵人: " + player.getName());
-            System.out.println("1. 狀態 | 2. 任務板 | 3. 接任務 | 4. 商店 | 5. 存檔並離開 | 6. 讀取存檔 | 7. 直接離開");
+            System.out.println("\n【主選單】獵人：" + player.getName());
+            System.out.println("1. 狀態 | 2. 任務板 | 3. 離開並存檔");
             System.out.print("指令: ");
+            int cmd = sc.nextInt();
 
-            if (!sc.hasNextInt()) {
-                sc.next();
-                continue;
-            }
-            int c = sc.nextInt();
-
-            switch (c) {
-                case 1 -> player.showStatus();
-                case 2 -> qs.showQuests();
-                case 3 -> {
-                    qs.showQuests();
-                    System.out.print("請輸入欲挑戰的任務編號: ");
-                    int i = sc.nextInt();
-                    Quest q = qs.acceptQuest(i);
-                    if (q != null) {
-                        bs.startBattle(player, q);
-                        qs.checkUnlocks();
-                    }
+            if (cmd == 1) {
+                player.showStatus();
+            } else if (cmd == 2) {
+                // 使用 qs 物件呼叫任務功能
+                List<Quest> quests = qs.getAvailableQuests();
+                for (int i = 0; i < quests.size(); i++) {
+                    System.out.println(i + ". " + quests.get(i).getName());
                 }
-                case 4 -> new StoreService().openStore(player);
-                case 5 -> {
-                    saveService.save(player);
-                    System.out.println(">> [系統] 遊戲進度已安全存入資料庫。再見！");
-                    return;
-                }
-                case 6 -> {
-                    saveService.load(player);
-                    System.out.println(">> [系統] 已重新載入存檔。");
-                    player.showStatus();
-                }
-                case 7 -> {
-                    System.out.println(">> [系統] 結束遊戲（未存檔）。");
-                    return;
-                }
-                default -> System.out.println(">> [錯誤] 無效指令。");
+            } else if (cmd == 3) {
+                saveService.save(player); // 離開前存檔
+                break;
             }
         }
     }
 
-    // 建立新玩家的私有方法
     private static Player createNewPlayer(Scanner sc) {
         System.out.print("請輸入獵人的大名: ");
         String name = sc.nextLine();
-        Player p = new Player(name);
-        p.equipWeapon(new Weapon("初階獵刀", 5));
-        System.out.println(">> [系統] 獵人 " + name + " 準備就緒！");
-        return p;
-    }
-
-    // 初始化任務池
-    private static void setupQuests(QuestService qs) {
-        for (QuestRank rank : QuestRank.values()) {
-            for (int i = 0; i < 3; i++) {
-                Monster m = MonsterFactory.createMonster(rank, i);
-                if (m != null) {
-                    Quest q = new Quest("【" + rank.getLabel() + "】" + m.getName() + "狩獵", rank, m);
-                    q.unlock();
-                    qs.addQuest(q);
-                }
-            }
-        }
+        return new Player(name);
     }
 }

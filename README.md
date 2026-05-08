@@ -1,19 +1,3 @@
-monster-hunter-project/
-├── lib/               # 放置 postgresql-42.7.3.jar
-├── sql/
-│   └── schema.sql     # 資料庫建表與 5 筆初始資料
-├── src/main/java/com/monster/
-│   ├── Main.java      # 程式入口 (只負責啟動)
-│   ├── config/        # DatabaseConfig.java (連線資訊)
-│   ├── dao/           # PlayerDAO.java (純 SQL 操縱)
-│   ├── model/         # Player.java, Weapon.java, enums/
-│   ├── service/       # SaveService.java (業務邏輯)
-│   └── view/          # GameView.java (負責印出選單、處理 Scanner)
-├── README.md          # 內含 Mermaid 圖與截圖
-└── .gitignore
-
-
-
 # 🎮 Java 魔物獵人（Monster Hunter）模擬系統
 
 這是一個基於 **Java 物件導向程式設計 (OOP)** 開發的文字冒險 RPG 系統。玩家扮演獵人，透過挑戰不同星級的魔物獲得經驗與金錢，並在商店中強化武器與補給，最終挑戰高難度的強大魔物。

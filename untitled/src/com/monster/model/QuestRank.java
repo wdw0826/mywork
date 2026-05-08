@@ -1,3 +1,5 @@
+package com.monster.model;
+
 public enum QuestRank {
     ONE_STAR("1★"),
     TWO_STAR("2★"),

@@ -1,3 +1,8 @@
+package com.monster.service;
+
+import com.monster.model.Monster;
+import com.monster.model.QuestRank;
+
 public class MonsterFactory {
     public static Monster createMonster(QuestRank rank, int type) {
         switch (rank) {

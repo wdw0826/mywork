@@ -1,3 +1,4 @@
+package com.monster.model;
 public class Player extends Character {
 
     private int level = 1;
@@ -9,9 +10,6 @@ public class Player extends Character {
     private Weapon weapon;
     private String name;
 
-    public Player() {
-        super(100, 10);
-    }
     public Player(String name) {
         super(100, 10); // 假設初始 HP 100, ATK 10
         this.name = name;

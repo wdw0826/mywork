@@ -1,3 +1,5 @@
+package com.monster.model;
+
 public class Monster extends Character {
     private String name;
     private int expValue; // 新增經驗值欄位

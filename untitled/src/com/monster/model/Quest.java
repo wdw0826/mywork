@@ -1,3 +1,5 @@
+package com.monster.model;
+
 public class Quest {
 
     private String name;

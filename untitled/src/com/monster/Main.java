@@ -1,20 +1,16 @@
+package com.monster;
+import com.monster.model.*;
+import com.monster.service.*;
+import com.monster.config.*;
+import com.monster.dao.*;
 import java.util.Scanner;
 
 public class Main {
-
     public static void main(String[] args) {
-        Scanner sc = new Scanner(System.in);
         SaveService saveService = new SaveService();
-        QuestService qs = new QuestService();
-        BattleService bs = new BattleService();
-        Player player = null;
+        saveService.initDatabase(); // 啟動即初始化表格
 
-        saveService.initDatabase();
-
-        // --- 初始化任務池 (維持你原本的邏輯) ---
-        setupQuests(qs);
-
-        // --- 遊戲啟動入口：詢問讀檔或新檔案 ---
+        Scanner sc = new Scanner(System.in);
         System.out.println("=== 歡迎來到 Java 魔物獵人世界 ===");
         System.out.println("1. 讀取舊有獵人存檔 (資料庫)");
         System.out.println("2. 建立新的獵人檔案");

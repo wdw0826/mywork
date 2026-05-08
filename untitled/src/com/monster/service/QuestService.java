@@ -1,3 +1,7 @@
+package com.monster.service;
+import com.monster.model.*;
+import com.monster.model.Quest;
+
 import java.util.*;
 
 public class QuestService {
